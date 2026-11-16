@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <title>Registro de Incidencias en Campo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="manifest" href="./manifest.json">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Registro de Incidencias en Campo</h1>
+    <span id="badge-red" class="badge online">En Línea</span>
+  </header>
+
+  <main>
+    <section class="tarjeta">
+      <form id="form-incidencia">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo" placeholder="Título de la incidencia" required>
+
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe lo ocurrido en campo..." required></textarea>
+
+        <button type="submit">Registrar Incidencia</button>
+      </form>
+    </section>
+
+    <section class="tarjeta">
+      <div class="seccion-titulo">
+        <h2>Bandeja de Salida (IndexedDB)</h2>
+        <button type="button" id="btn-purgar">Purgar sincronizados</button>
+      </div>
+      <ul id="lista-outbox"></ul>
+    </section>
+  </main>
+
+  <script src="./db-helper.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
