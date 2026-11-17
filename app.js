@@ -1,9 +1,4 @@
-// app.js — Lógica de la UI: red, Service Worker, Outbox y formularios (Temas 5.2 y 5.3)
-// Sin palabras clave de concurrencia moderna: toda la asincronía se resuelve con Promesas (.then/.catch).
 
-// ---------------------------------------------------------------------------
-// a) Indicador de conexión
-// ---------------------------------------------------------------------------
 function actualizarIndicadorRed() {
   const badge = document.getElementById('badge-red');
   const enLinea = navigator.onLine;
@@ -12,9 +7,6 @@ function actualizarIndicadorRed() {
   badge.classList.toggle('offline', !enLinea);
 }
 
-// ---------------------------------------------------------------------------
-// b) Registro del Service Worker + escucha de mensajes desde el SW
-// ---------------------------------------------------------------------------
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js')
     .then((registro) => console.log('SW registrado:', registro.scope))
@@ -28,10 +20,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// c) Envío de un reporte: intenta POST directo; si falla, encola en Outbox
-//    y registra la etiqueta de Background Sync (si el navegador la soporta).
-// ---------------------------------------------------------------------------
 function procesarEnvioReporte(datosFormulario) {
   const endpoint = 'https://jsonplaceholder.typicode.com/posts';
   return fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datosFormulario) })
@@ -56,10 +44,6 @@ function procesarEnvioReporte(datosFormulario) {
     .then(() => renderizarColaOutbox());
 }
 
-// ---------------------------------------------------------------------------
-// d) Fallback de sincronización para navegadores SIN Background Sync:
-//    reenvía a mano todos los registros pendientes al volver la conexión.
-// ---------------------------------------------------------------------------
 function sincronizarPendientesFallback() {
   return obtenerTodosLosRegistros()
     .then((registros) => {
@@ -88,9 +72,6 @@ function sincronizarPendientesFallback() {
     });
 }
 
-// ---------------------------------------------------------------------------
-// e) Render de la bandeja de salida (Outbox) en la lista de la UI
-// ---------------------------------------------------------------------------
 function renderizarColaOutbox() {
   const lista = document.getElementById('lista-outbox');
   obtenerTodosLosRegistros()
@@ -105,7 +86,6 @@ function renderizarColaOutbox() {
         return;
       }
 
-      // Más recientes primero
       const ordenados = registros.slice().sort((a, b) => b.fechaCreacion - a.fechaCreacion);
 
       ordenados.forEach((registro) => {
@@ -135,9 +115,6 @@ function renderizarColaOutbox() {
     });
 }
 
-// ---------------------------------------------------------------------------
-// f) Envío del formulario: evita el POST nativo y delega en procesarEnvioReporte
-// ---------------------------------------------------------------------------
 document.getElementById('form-incidencia').addEventListener('submit', (e) => {
   e.preventDefault();
   const titulo = document.getElementById('titulo').value.trim();
@@ -147,9 +124,6 @@ document.getElementById('form-incidencia').addEventListener('submit', (e) => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// g) Purga: elimina de IndexedDB los registros ya sincronizados
-// ---------------------------------------------------------------------------
 document.getElementById('btn-purgar').addEventListener('click', () => {
   obtenerTodosLosRegistros()
     .then((registros) => {
@@ -166,9 +140,6 @@ document.getElementById('btn-purgar').addEventListener('click', () => {
     });
 });
 
-// ---------------------------------------------------------------------------
-// h) Eventos de red: si no hay SyncManager, reintentamos con fallback manual
-// ---------------------------------------------------------------------------
 window.addEventListener('online', () => {
   actualizarIndicadorRed();
   if (!('SyncManager' in window)) {
@@ -178,8 +149,5 @@ window.addEventListener('online', () => {
 });
 window.addEventListener('offline', actualizarIndicadorRed);
 
-// ---------------------------------------------------------------------------
-// i) Arranque de la UI
-// ---------------------------------------------------------------------------
 actualizarIndicadorRed();
 renderizarColaOutbox();

@@ -12,7 +12,6 @@ body {
   padding: 1.5rem 1rem;
 }
 
-/* Cabecera: título + indicador de red */
 .cabecera {
   max-width: 640px;
   margin: 0 auto 1.5rem;
@@ -49,7 +48,6 @@ main {
   margin: 0 auto;
 }
 
-/* Tarjetas */
 .tarjeta {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -59,7 +57,6 @@ main {
   margin-bottom: 1.25rem;
 }
 
-/* Formulario */
 form label {
   display: block;
   font-weight: 600;
@@ -100,7 +97,6 @@ form button:hover {
   background-color: #1d4ed8;
 }
 
-/* Título de sección + botón purgar */
 .seccion-titulo {
   display: flex;
   align-items: center;
@@ -129,7 +125,6 @@ form button:hover {
   background-color: #475569;
 }
 
-/* Bandeja de salida */
 #lista-outbox {
   list-style: none;
 }
@@ -171,7 +166,6 @@ form button:hover {
   font-weight: 600;
 }
 
-/* Chip de estado */
 .chip {
   font-size: 0.72rem;
   font-weight: 700;

@@ -1,5 +1,3 @@
-// sw.js — Service Worker: caché estática + Background Sync del Outbox (Tema 5.3)
-// Trae las funciones de IndexedDB desde db-helper.js (mismas funciones globales que usa la UI).
 importScripts('./db-helper.js');
 
 const CACHE_STATIC_NAME = 'static-outbox-v3';
@@ -15,7 +13,6 @@ const STATIC_FILES = [
   './icon-512.png'
 ];
 
-// Install: precachea los archivos estáticos y deja que la página de control se active ya
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_STATIC_NAME)
@@ -24,7 +21,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: elimina versiones viejas de la caché y toma el control de las páginas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
@@ -39,7 +35,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: primero caché, luego red; si ambos fallan, la página (fallback offline)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
@@ -49,7 +44,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Fragment B: avisa a todas las ventanas abiertas que la bandeja se sincronizó
 function notificarClientesActualizacion() {
   return self.clients.matchAll({ type: 'window', includeUncontrolled: true })
     .then((clientes) => {
@@ -59,7 +53,6 @@ function notificarClientesActualizacion() {
     });
 }
 
-// Fragment C: reenvía los registros pendientes y los marca como sincronizados
 function sincronizarPendientesSW() {
   return obtenerTodosLosRegistros().then((registros) => {
     const pendientes = registros.filter((item) => item.estado === 'pendiente');
@@ -84,7 +77,6 @@ function sincronizarPendientesSW() {
   });
 }
 
-// Fragment D: el navegador dispara este evento al volver la conexión
 self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-reportes') {
     event.waitUntil(
