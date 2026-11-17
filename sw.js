@@ -2,7 +2,7 @@
 // Trae las funciones de IndexedDB desde db-helper.js (mismas funciones globales que usa la UI).
 importScripts('./db-helper.js');
 
-const CACHE_STATIC_NAME = 'static-outbox-v2';
+const CACHE_STATIC_NAME = 'static-outbox-v3';
 const STATIC_FILES = [
   './',
   './index.html',
@@ -10,7 +10,9 @@ const STATIC_FILES = [
   './db-helper.js',
   './app.js',
   './manifest.json',
-  './icon.svg'
+  './icon.svg',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // Install: precachea los archivos estáticos y deja que la página de control se active ya
@@ -71,10 +73,10 @@ function sincronizarPendientesSW() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: item.titulo, body: item.descripcion })
       }).then((res) => {
-        if (res.ok) {
-          return actualizarEstadoRegistro(item.id, 'sincronizado');
+        if (!res.ok) {
+          throw new Error(`Error HTTP ${res.status} al sincronizar ID ${item.id}`);
         }
-        return null;
+        return actualizarEstadoRegistro(item.id, 'sincronizado');
       });
     });
     return Promise.all(promesasDeEnvio)

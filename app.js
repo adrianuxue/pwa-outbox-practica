@@ -74,10 +74,10 @@ function sincronizarPendientesFallback() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title: item.titulo, body: item.descripcion })
         }).then((res) => {
-          if (res.ok) {
-            return actualizarEstadoRegistro(item.id, 'sincronizado');
+          if (!res.ok) {
+            throw new Error(`Error HTTP ${res.status} al reintentar envío del registro ${item.id}`);
           }
-          return null;
+          return actualizarEstadoRegistro(item.id, 'sincronizado');
         });
       });
       return Promise.all(promesasDeEnvio);
